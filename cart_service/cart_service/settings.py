@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-(@emu@82tjcrjhef_7s*3gh6m63rxifa)3@o*t8v%$$!f+@&x5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -40,9 +40,11 @@ INSTALLED_APPS = [
     # Third Party apps
     "rest_framework",
     "corsheaders",
+    "drf_spectacular",
     # Custom apps
     'cart'
 ]
+
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",  # Cors Middleware
@@ -56,6 +58,7 @@ MIDDLEWARE = [
 ]
 
 REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
@@ -129,7 +132,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = "static/"
-
+STATIC_ROOT = 'static/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 

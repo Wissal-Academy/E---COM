@@ -11,6 +11,7 @@ from .serializers import CartSerializer, CartItemSerializer
 
 class CartViewSet(viewsets.ModelViewSet):
     serializer_class = CartSerializer
+    queryset = Cart.objects.all()
     permission_classes = [AllowAny]
 
     def get_queryset(self):
