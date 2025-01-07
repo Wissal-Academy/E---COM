@@ -1,3 +1,73 @@
-from django.shortcuts import render
+import requests
 
-# Create your views here.
+from rest_framework import viewsets, status
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
+
+from .models import Payment
+from .serializers import PaymentSerializer
+
+
+class PaymentViewSet(viewsets.ModelViewSet):
+    permission_classes = [AllowAny]
+    queryset = Payment.objects.all()
+    serializer_class = PaymentSerializer
+
+    @action(detail=True, methods=['post'])
+    def payment(self, request, pk=None):
+        try:
+            cart_id = self.data.get('cart_id')
+            # Check if the cart exists
+            response = requests.get(
+                f'http://localhost:8001/api/carts/{cart_id}/'
+            )
+            # Check if the response if cart exists
+            if response.status_code == 200:
+                # if the cart exists get the data into json
+                cart_data = response.json()
+                """
+                "id": 1,
+                    "user": 1,
+                    "items": [
+                    {
+                        "id": 1,
+                        "product_id": 1,
+                        "quantity": 4,
+                        "price": "2.92",
+                        "subtotal": "11.68"
+                    },
+                    ...
+                    ],
+                    "total": "2323.60",
+                    ...
+                }
+                """
+                # Create a Payment Transaction
+                payment = Payment.objects.create(
+                    user=request.user,          # FOR THE USER ID
+                    cart_id=cart_id,            # LINK THE CART TO THE PAYEMENT
+                    amount=cart_data['total'],  # GET THE TOTAL OF THE CART
+                    status=Payment.COMPLETED    # STATUS OF THE PAYMENT
+                )
+                payment.save()
+            else:
+                return Response(
+                    {
+                        'error': 'Failed to fetch the cart'
+                    },
+                    status=status.HTTP_404_NOT_FOUND
+                )
+
+        except Exception as e:
+            return Response(
+                    {
+                        'error': f'{e}'
+                    },
+                    status=status.HTTP_404_NOT_FOUND
+                )
+
+
+    @action(detail=True, methods=['post'])
+    def retry_payment(self, rqeuest, pk=None):
+        pass

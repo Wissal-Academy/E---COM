@@ -12,8 +12,8 @@ class Payment(models.Model):
 
     STATUS_CHOICES = (
         # (DB_VALUE, APP_VIEW)
-        (PENDING, "Pending")
-        (COMPLETED, "Completed")
+        (PENDING, "Pending"),
+        (COMPLETED, "Completed"),
         (FAILED, "Failed")
     )
 
