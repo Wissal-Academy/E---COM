@@ -16,6 +16,14 @@ class PaymentViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'])
     def payment(self, request, pk=None):
+        '''
+            Body of the request
+            {
+                "cart_id": 1,
+                "user": 1
+            }
+        '''
+  
         try:
             cart_id = request.data.get('cart_id')
             # Check if the cart exists
