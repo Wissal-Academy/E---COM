@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Category(models.Model):
-    name = models.CharField('name', max_length=100),
+    name = models.CharField('name', max_length=100)
     description = models.TextField('description', blank=True)
 
     create_at = models.DateTimeField(auto_now_add=True)

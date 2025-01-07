@@ -1,4 +1,5 @@
 import requests
+from decimal import Decimal
 
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
@@ -19,7 +20,7 @@ class CartViewSet(viewsets.ModelViewSet):
 
     def get_product_details(self, product_id):
         response = requests.get(
-            f'http://localhost:8000/api/products/{product_id}'
+            f'http://localhost:8001/api/products/{product_id}'
         )
         if response.status_code == 200:
             """
@@ -52,7 +53,7 @@ class CartViewSet(viewsets.ModelViewSet):
         cart_item, created = CartItem.objects.get_or_create(
             cart=cart,
             product_id=product_id,
-            defaults={"price": product['price']}
+            defaults={"price": Decimal(str(product['price']))}
         )
 
         if created:
