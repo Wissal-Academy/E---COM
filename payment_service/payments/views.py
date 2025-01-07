@@ -17,10 +17,10 @@ class PaymentViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'])
     def payment(self, request, pk=None):
         try:
-            cart_id = self.data.get('cart_id')
+            cart_id = request.data.get('cart_id')
             # Check if the cart exists
             response = requests.get(
-                f'http://localhost:8001/api/carts/{cart_id}/'
+                f'http://127.0.0.1:8000/api/carts/{cart_id}/'
             )
             # Check if the response if cart exists
             if response.status_code == 200:
@@ -51,6 +51,8 @@ class PaymentViewSet(viewsets.ModelViewSet):
                     status=Payment.COMPLETED    # STATUS OF THE PAYMENT
                 )
                 payment.save()
+                serializer = PaymentSerializer(payment)
+                return Response(serializer.data, status=status.HTTP_200_OK)
             else:
                 return Response(
                     {

@@ -15,8 +15,8 @@ class CartViewSet(viewsets.ModelViewSet):
     queryset = Cart.objects.all()
     permission_classes = [AllowAny]
 
-    def get_queryset(self):
-        return Cart.objects.filter(user=self.request.user)
+    # def get_queryset(self):
+    #     return Cart.objects.filter(user=self.request.user)
 
     def get_product_details(self, product_id):
         response = requests.get(
