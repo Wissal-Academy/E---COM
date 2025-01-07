@@ -38,13 +38,13 @@ class PaymentViewSet(viewsets.ModelViewSet):
                 "id": 1,
                     "user": 1,
                     "items": [
-                    {
-                        "id": 1,
-                        "product_id": 1,
-                        "quantity": 4,
-                        "price": "2.92",
-                        "subtotal": "11.68"
-                    },
+                        {
+                            "id": 1,
+                            "product_id": 1,
+                            "quantity": 4,
+                            "price": "2.92",
+                            "subtotal": "11.68"
+                        },
                     ...
                     ],
                     "total": "2323.60",
@@ -59,8 +59,27 @@ class PaymentViewSet(viewsets.ModelViewSet):
                     status=Payment.COMPLETED    # STATUS OF THE PAYMENT
                 )
                 payment.save()
+                for item in cart_data['items']:
+                    pk = item["product_id"]
+                    qte = item["quantity"]
+                    response = requests.get(
+                        f'http://127.0.0.1:8001/api/products/{pk}/'
+                    )
+                    # ITEM DATA == PRODUCT GET
+                    # QTE == CART
+                    item_data = response.json()
+                    new_qte = item_data["stock"] - qte
+                    item_data.update({"stock": new_qte})
+                    print(item_data, "<<<<<<<<<<<<<<<<<<<<<<<<")
+                    requests.put(
+                        f'http://127.0.0.1:8001/api/products/{pk}/',
+                        item_data
+                    )
                 serializer = PaymentSerializer(payment)
-                return Response(serializer.data, status=status.HTTP_200_OK)
+                return Response(
+                    serializer.data,
+                    status=status.HTTP_200_OK
+                )
             else:
                 return Response(
                     {
