@@ -6,7 +6,7 @@ from drf_spectacular.views import (
     SpectacularSwaggerView,
 )
 from rest_framework.routers import DefaultRouter
-from products.views import CategoryViewSet, ProductViewSet
+from products.views import CategoryViewSet, ProductViewSet, APITokenGenerate
 
 router = DefaultRouter()
 router.register('products', ProductViewSet)
@@ -27,5 +27,6 @@ urlpatterns = [
         SpectacularRedocView.as_view(url_name="schema"),
         name="redoc",
     ),
-    path("api/", include(router.urls))
+    path("api/", include(router.urls)),
+    path("api/custom/token/generate/", APITokenGenerate.as_view())
 ]

@@ -23,12 +23,12 @@ class PaymentViewSet(viewsets.ModelViewSet):
                 "user": 1
             }
         '''
-  
+
         try:
             cart_id = request.data.get('cart_id')
             # Check if the cart exists
             response = requests.get(
-                f'http://127.0.0.1:8000/api/carts/{cart_id}/'
+                f'{CART_API}/carts/{cart_id}/'
             )
             # Check if the response if cart exists
             if response.status_code == 200:
@@ -63,16 +63,15 @@ class PaymentViewSet(viewsets.ModelViewSet):
                     pk = item["product_id"]
                     qte = item["quantity"]
                     response = requests.get(
-                        f'http://127.0.0.1:8001/api/products/{pk}/'
+                        f'{PRODUCT_API}/products/{pk}/'
                     )
                     # ITEM DATA == PRODUCT GET
                     # QTE == CART
                     item_data = response.json()
                     new_qte = item_data["stock"] - qte
                     item_data.update({"stock": new_qte})
-                    print(item_data, "<<<<<<<<<<<<<<<<<<<<<<<<")
                     requests.put(
-                        f'http://127.0.0.1:8001/api/products/{pk}/',
+                        f'{PRODUCT_API}/products/{pk}/',
                         item_data
                     )
                 serializer = PaymentSerializer(payment)
