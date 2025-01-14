@@ -3,6 +3,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
+from drf_spectacular.utils import extend_schema, OpenApiParameter
+
 from .models import Category, Product, APIToken
 from .serializers import (
     CategorySerializer,
@@ -14,9 +16,13 @@ from .serializers import (
 
 
 class APITokenGenerate(APIView):
-    # IS AUTHENTICATED === USER IS CONNTECTED
     permission_classes = [IsAuthenticated]
 
+    # Customize the Schema of OPENAPI To take the fields of the serializer
+    @extend_schema(
+        description='Create a TOKEN & Name',
+        request=APITokenCreateSerializer,
+    )
     def post(self, request):
         serializer = APITokenCreateSerializer(
             data=request.data,

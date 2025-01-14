@@ -15,7 +15,7 @@ class APIToken(models.Model):
         on_delete=models.CASCADE,
         related_name="api_tokens")
     token = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, default='New')
     create_at = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
 
